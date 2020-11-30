@@ -1,0 +1,40 @@
+body {
+	background-color: #2b2d3b;
+}
+
+.flex-a {
+	display: flex;
+	justify-content: space-around;
+}
+
+.center {
+  padding-top: clamp(50px,40vh,500px);
+  text-align: center;
+}
+
+.number-font {
+	font-size: clamp(8px,100%,24px);
+}
+
+.selected-sort {
+	border: 2px dashed white;
+}
+
+.select-title {
+	font-weight: bold;
+	text-transform: uppercase;
+	color: white;
+	margin-bottom: 10px;
+}
+
+.btn-start {
+	border-color: white;
+	width: clamp(100px,20vw,200px);
+	margin-top: 30px;
+}
+
+.number-item {
+	width: 4rem; 
+	height: 4rem; 
+	background-color:#86ecfb;
+}

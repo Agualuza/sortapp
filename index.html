@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>SortApp</title>
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+	<script src="./js/jquery3.min.js"></script>
+
+	<link rel="stylesheet" href="./css/style.css" />
+</head>
+<body>
+	<div id="div-main" class="container">
+		<div class="row flex-a col-12"> 
+			<div class="">
+				<img src="./images/sortapp.png" class="img-fluid">
+			</div>
+		</div>
+
+		<div class="row flex-a col-12"> 
+		   <div class="card col-12" style="width: 12rem; height: 4rem; background-color:#2b2d3b;border:none;">
+		   		<div class="input-group mb-3">
+				  <div class="input-group-prepend">
+				    <span class="input-group-text" id="inputGroup-sizing-default">Números</span>
+				  </div>
+				  <input type="text" class="form-control" id="numbers-input" placeholder="Ex: 1,3,4,5,2,6,8,7" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+				</div>
+		   </div>
+		</div>
+		<div class="row flex-a col-12"> 
+			<span class="select-title">Selecione o algoritmo<span>
+		</div>
+		<div class="row flex-a col-12"> 
+			<div class="col-3">
+				<a onclick="clicked(1)"><img id="img-bubble" src="./images/bubble.png" class="img-fluid"></a>
+			</div>
+			<div class="col-3">
+				<a onclick="clicked(2)"><img id="img-merge" src="./images/merge.png" class="img-fluid"></a>
+			</div>
+		</div>
+
+		<div class="col-12 flex-a d-none" id="div-error">
+			<div class="alert alert-danger" role="alert">
+			  <span id="error-msg"><span>
+			  
+			</div>
+		</div>
+
+		<div class="row flex-a col-12">
+			<button type="button" class="btn btn-info btn-start" onclick="generateList()">Iniciar</button>
+		</div>
+
+		<select id="fake-select" style="display:none">
+			<option selected value="0"></option>
+			<option id="bubble-sort" value="1"></option>
+			<option id="merge-sort" value="2"></option>
+		</select>
+	</div>
+
+	<div class="container d-none"  id="div-sort-bubble">
+		<div class="col-12 flex-a select-title mt-5" style="font-size:42px;">Bubble Sort</div>
+		<div class="row flex-a col-12 my-5" id="row-sort-bubble">
+
+		</div>
+		<div class="row flex-a col-12 my-5" id="row-sort-bubble">
+			<svg style="fill:white;" width="3em" height="3em" viewBox="0 0 16 16" class="bi bi-pause-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  				<path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5zm5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5z"/>
+			</svg>
+			<svg style="fill:white;" width="3em" height="3em" viewBox="0 0 16 16" class="bi bi-shuffle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+			  <path fill-rule="evenodd" d="M0 3.5A.5.5 0 0 1 .5 3H1c2.202 0 3.827 1.24 4.874 2.418.49.552.865 1.102 1.126 1.532.26-.43.636-.98 1.126-1.532C9.173 4.24 10.798 3 13 3v1c-1.798 0-3.173 1.01-4.126 2.082A9.624 9.624 0 0 0 7.556 8a9.624 9.624 0 0 0 1.317 1.918C9.828 10.99 11.204 12 13 12v1c-2.202 0-3.827-1.24-4.874-2.418A10.595 10.595 0 0 1 7 9.05c-.26.43-.636.98-1.126 1.532C4.827 11.76 3.202 13 1 13H.5a.5.5 0 0 1 0-1H1c1.798 0 3.173-1.01 4.126-2.082A9.624 9.624 0 0 0 6.444 8a9.624 9.624 0 0 0-1.317-1.918C4.172 5.01 2.796 4 1 4H.5a.5.5 0 0 1-.5-.5z"/>
+			  <path d="M13 5.466V1.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192zm0 9v-3.932a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192z"/>
+			</svg>
+			<svg style="fill:white;" width="3em" height="3em" viewBox="0 0 16 16" class="bi bi-backspace-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+			  <path fill-rule="evenodd" d="M15.683 3a2 2 0 0 0-2-2h-7.08a2 2 0 0 0-1.519.698L.241 7.35a1 1 0 0 0 0 1.302l4.843 5.65A2 2 0 0 0 6.603 15h7.08a2 2 0 0 0 2-2V3zM5.829 5.854a.5.5 0 1 1 .707-.708l2.147 2.147 2.146-2.147a.5.5 0 1 1 .707.708L9.39 8l2.146 2.146a.5.5 0 0 1-.707.708L8.683 8.707l-2.147 2.147a.5.5 0 0 1-.707-.708L7.976 8 5.829 5.854z"/>
+			</svg>
+		</div>
+	</div>
+
+	<div class="container d-none"  id="div-sort-merge">
+		<div class="col-12 flex-a select-title mt-5" style="font-size:42px;">Merge Sort</div>
+		<div class="row flex-a col-12 my-5" id="row-sort-merge">
+
+		</div>
+		<div class="row flex-a col-12 my-5" id="row-sort-bubble">
+			<svg style="fill:white;" width="3em" height="3em" viewBox="0 0 16 16" class="bi bi-pause-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  				<path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5zm5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5z"/>
+			</svg>
+			<svg style="fill:white;" width="3em" height="3em" viewBox="0 0 16 16" class="bi bi-shuffle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+			  <path fill-rule="evenodd" d="M0 3.5A.5.5 0 0 1 .5 3H1c2.202 0 3.827 1.24 4.874 2.418.49.552.865 1.102 1.126 1.532.26-.43.636-.98 1.126-1.532C9.173 4.24 10.798 3 13 3v1c-1.798 0-3.173 1.01-4.126 2.082A9.624 9.624 0 0 0 7.556 8a9.624 9.624 0 0 0 1.317 1.918C9.828 10.99 11.204 12 13 12v1c-2.202 0-3.827-1.24-4.874-2.418A10.595 10.595 0 0 1 7 9.05c-.26.43-.636.98-1.126 1.532C4.827 11.76 3.202 13 1 13H.5a.5.5 0 0 1 0-1H1c1.798 0 3.173-1.01 4.126-2.082A9.624 9.624 0 0 0 6.444 8a9.624 9.624 0 0 0-1.317-1.918C4.172 5.01 2.796 4 1 4H.5a.5.5 0 0 1-.5-.5z"/>
+			  <path d="M13 5.466V1.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192zm0 9v-3.932a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192z"/>
+			</svg>
+			<svg style="fill:white;" width="3em" height="3em" viewBox="0 0 16 16" class="bi bi-backspace-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+			  <path fill-rule="evenodd" d="M15.683 3a2 2 0 0 0-2-2h-7.08a2 2 0 0 0-1.519.698L.241 7.35a1 1 0 0 0 0 1.302l4.843 5.65A2 2 0 0 0 6.603 15h7.08a2 2 0 0 0 2-2V3zM5.829 5.854a.5.5 0 1 1 .707-.708l2.147 2.147 2.146-2.147a.5.5 0 1 1 .707.708L9.39 8l2.146 2.146a.5.5 0 0 1-.707.708L8.683 8.707l-2.147 2.147a.5.5 0 0 1-.707-.708L7.976 8 5.829 5.854z"/>
+			</svg>
+		</div>
+	</div>
+	
+<script type="text/javascript">
+	$(document).ready(() => {
+		idMap = new Map();
+	});
+
+	clicked = (value) => {
+		bubble = document.getElementById("img-bubble");
+		merge = document.getElementById("img-merge");
+		if(value == 1){
+			merge.className = "img-fluid";
+			bubble.className = "img-fluid selected-sort";
+		} else if(value == 2) {
+			bubble.className = "img-fluid";
+			merge.className = "img-fluid selected-sort";
+		}
+		document.getElementById("fake-select").value = value;
+
+	}
+
+	animatedBubble = (n1,n2) => {
+		id1 = idMap.get(n1);
+		id2 = idMap.get(n2);
+      	setTimeout(function (){ $("#n-"+id1).css("background-color",old_color);$("#n-"+id2).css("background-color",old_color)},2000)
+
+
+		var changing_color = '#de4949';
+		var old_color = '#86ecfb';
+
+		$("#n-"+id1).stop()
+	      .css("background-color",changing_color)
+	      .hide(200, function() {
+	          $("#n-"+id1).css("background-color",changing_color)
+	          $("#n-"+id1).text(n2)
+	            .show(1000)
+	      });
+
+	    $("#n-"+id2).stop()
+	      .css("background-color",changing_color)
+	      .hide(200, function() {
+	          $("#n-"+id2).css("background-color",changing_color)
+	          $("#n-"+id2).text(n1)
+            	.show(1000)
+	      });
+
+	}
+
+	bubbleSort = (list) => {
+	    let len = list.length;
+	    for (let i = 0; i < len; i++) {
+	        for (let j = 0; j < len; j++) {
+	            if (list[j] > list[j + 1]) {
+	            	var n1 = list[j];
+	            	var n2 = list[j+1];
+	                let tmp = list[j];
+	                list[j] = list[j + 1];
+	                list[j + 1] = tmp;
+	                console.log("trocou " + n1 + " por " + n2);
+	                setTimeout(function (){animatedBubble(n1,n2)},2000);
+	            }
+	        }
+	    }
+	    return list;
+	};
+
+	hideMain = () => {
+		document.getElementById("div-main").className = "container d-none";
+	}
+
+	showMain = () => {
+		document.getElementById("div-main").className = "container";
+	}
+
+	hideBubble = () => {
+		document.getElementById("div-sort-bubble").className = "container d-none";
+	}
+
+	showBubble = (list) => {
+		document.getElementById("div-sort-bubble").className = "container";
+		setTimeout(function (){bubbleSort(list)},500);
+	}
+
+	hideMerge = () => {
+		document.getElementById("div-sort-merge").className = "container d-none";
+	}
+
+	showMerge = () => {
+		document.getElementById("div-sort-merge").className = "container";
+	}
+
+	hideError = () => {
+		document.getElementById("div-error").className = "container mt-3 d-none";
+	}
+
+	showError = () => {
+		document.getElementById("div-error").className = "container mt-3";
+	}
+
+	addError = (msg) => {
+		document.getElementById("error-msg").innerText = msg;
+		showError();
+	}
+
+	makeid = (length) =>  {
+	   var result           = '';
+	   var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	   var charactersLength = characters.length;
+	   for ( var i = 0; i < length; i++ ) {
+	      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+	   }
+	   return result;
+	}
+
+	hashCode = s => s.split('').reduce((a,b)=>{a=((a<<5)-a)+b.charCodeAt(0);return a&a},0)
+
+	generateList = () => {
+		if(document.getElementById("numbers-input").value.length == 0) {
+			var msg = "Lista de números não pode ser vazia";
+			addError(msg);
+			return;
+		}
+
+		if(document.getElementById("fake-select").value != 1 && document.getElementById("fake-select").value != 2){
+			var msg = "Escolha um algoritmo de ordenação";
+			addError(msg);
+			return;
+		}
+
+
+		hideMain();
+		list =  document.getElementById("numbers-input").value.split(',');
+		list.forEach((item) => {
+			var n = hashCode(makeid(4));
+			var child = document.createElement("div");
+			var el_id = "id='n-" + String(n) + "'";
+			child.className = "card number-item";
+			var html = '<div ' + el_id + 'class="card-body">'+
+			    item +
+			  '</div>';
+			child.innerHTML = html;
+
+			var id = "row-sort-bubble";
+			if(document.getElementById("fake-select").value == 2) {
+				showMerge();
+				id = "row-sort-merge";
+			} else {
+				showBubble(list);
+			}
+			document.getElementById(id).appendChild(child);
+			idMap.set(item,n);
+		})
+
+	
+	}
+
+
+
+</script>
+</body>
+</html>
