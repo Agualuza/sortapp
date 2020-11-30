@@ -72,10 +72,13 @@
 			  <path fill-rule="evenodd" d="M0 3.5A.5.5 0 0 1 .5 3H1c2.202 0 3.827 1.24 4.874 2.418.49.552.865 1.102 1.126 1.532.26-.43.636-.98 1.126-1.532C9.173 4.24 10.798 3 13 3v1c-1.798 0-3.173 1.01-4.126 2.082A9.624 9.624 0 0 0 7.556 8a9.624 9.624 0 0 0 1.317 1.918C9.828 10.99 11.204 12 13 12v1c-2.202 0-3.827-1.24-4.874-2.418A10.595 10.595 0 0 1 7 9.05c-.26.43-.636.98-1.126 1.532C4.827 11.76 3.202 13 1 13H.5a.5.5 0 0 1 0-1H1c1.798 0 3.173-1.01 4.126-2.082A9.624 9.624 0 0 0 6.444 8a9.624 9.624 0 0 0-1.317-1.918C4.172 5.01 2.796 4 1 4H.5a.5.5 0 0 1-.5-.5z"/>
 			  <path d="M13 5.466V1.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192zm0 9v-3.932a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192z"/>
 			</svg>
-			<svg style="fill:white;" width="3em" height="3em" viewBox="0 0 16 16" class="bi bi-backspace-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+			<a style="cursor:pointer;" onclick="backToMain()"><svg style="fill:white;" width="3em" height="3em" viewBox="0 0 16 16" class="bi bi-backspace-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 			  <path fill-rule="evenodd" d="M15.683 3a2 2 0 0 0-2-2h-7.08a2 2 0 0 0-1.519.698L.241 7.35a1 1 0 0 0 0 1.302l4.843 5.65A2 2 0 0 0 6.603 15h7.08a2 2 0 0 0 2-2V3zM5.829 5.854a.5.5 0 1 1 .707-.708l2.147 2.147 2.146-2.147a.5.5 0 1 1 .707.708L9.39 8l2.146 2.146a.5.5 0 0 1-.707.708L8.683 8.707l-2.147 2.147a.5.5 0 0 1-.707-.708L7.976 8 5.829 5.854z"/>
-			</svg>
+			</svg></a>
 		</div>
+		<br/>
+		<div id="row-sort-bubble-text">
+		<div>
 	</div>
 
 	<div class="container d-none"  id="div-sort-merge">
@@ -117,47 +120,90 @@
 	}
 
 	animatedBubble = (n1,n2) => {
+		console.log("change " + n1 + " -> " + n2);
 		id1 = idMap.get(n1);
 		id2 = idMap.get(n2);
-      	setTimeout(function (){ $("#n-"+id1).css("background-color",old_color);$("#n-"+id2).css("background-color",old_color)},2000)
+      	// setTimeout(function (){ $("#n-"+id1).css("background-color",old_color);$("#n-"+id2).css("background-color",old_color)},2200)
 
-
+      	console.log("change id " + id1 + " -> "+id2)
 		var changing_color = '#de4949';
 		var old_color = '#86ecfb';
 
 		$("#n-"+id1).stop()
 	      .css("background-color",changing_color)
-	      .hide(200, function() {
+	      .hide(400, function() {
 	          $("#n-"+id1).css("background-color",changing_color)
 	          $("#n-"+id1).text(n2)
+	          // $("#n-"+id1).attr("id","#n-"+id2)
 	            .show(1000)
-	      });
+	      }).show(1500,function() {$("#n-"+id1).css("background-color",old_color)});
 
 	    $("#n-"+id2).stop()
 	      .css("background-color",changing_color)
-	      .hide(200, function() {
+	      .hide(400, function() {
 	          $("#n-"+id2).css("background-color",changing_color)
 	          $("#n-"+id2).text(n1)
+	          // $("#n-"+id2).attr("id","#n-"+id1)
             	.show(1000)
-	      });
+	      }).show(1500,function() {$("#n-"+id2).css("background-color",old_color)});
 
+	      var html = "<div class='clear-msg-change' align='center'><p style='font-size:42px;color:white;'><b>Trocando " + n1 + " por " + n2 + "</b></p><div>"; 
+	      $('.clear-msg-change').remove();
+	      $("#row-sort-bubble-text").append(html);
+	}
+
+
+
+	backToMain = () => {
+			var exit = confirm("Tem certeza que deseja sair?");
+
+			if (exit) {
+				document.location.reload(true);
+			}
+	}
+
+	doAnimation = (list,i,size) => {
+		if (i < size) {
+			setTimeout(function (){
+				animatedBubble(list[i].get("n1"),list[i].get("n2"));
+				id1 = idMap.get(list[i].get("n1"));
+				id2 = idMap.get(list[i].get("n2"));
+				idMap.set(list[i].get("n1"),id2);
+				idMap.set(list[i].get("n2"),id1);
+
+				doAnimation(list,i+1,size);
+			},2000);
+		} else {
+			var html = "<div class='clear-msg-change' align='center'><p style='font-size:42px;color:white;'><b>Ordenado</b></p><div>"; 
+	      $('.clear-msg-change').remove();
+	      $("#row-sort-bubble-text").append(html);
+		}
 	}
 
 	bubbleSort = (list) => {
 	    let len = list.length;
+	    array = [];
+
 	    for (let i = 0; i < len; i++) {
 	        for (let j = 0; j < len; j++) {
 	            if (list[j] > list[j + 1]) {
+	    			var map = new Map();
 	            	var n1 = list[j];
 	            	var n2 = list[j+1];
 	                let tmp = list[j];
 	                list[j] = list[j + 1];
 	                list[j + 1] = tmp;
-	                console.log("trocou " + n1 + " por " + n2);
-	                setTimeout(function (){animatedBubble(n1,n2)},2000);
+	                map.set("n1",n1);
+	                map.set("n2",n2);
+	                array.push(map);
+	                
 	            }
 	        }
 	    }
+	    
+	    console.log(array)
+	    doAnimation(array,0,array.length);
+
 	    return list;
 	};
 
@@ -239,15 +285,17 @@
 
 			var id = "row-sort-bubble";
 			if(document.getElementById("fake-select").value == 2) {
-				showMerge();
 				id = "row-sort-merge";
-			} else {
-				showBubble(list);
-			}
+			} 
 			document.getElementById(id).appendChild(child);
 			idMap.set(item,n);
 		})
 
+		if(document.getElementById("fake-select").value == 2) {
+			showMerge();
+		} else {
+			showBubble(list);
+		}
 	
 	}
 
