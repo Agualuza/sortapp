@@ -65,13 +65,16 @@
 
 		</div>
 		<div class="row flex-a col-12 my-5" id="row-sort-bubble">
-			<svg style="fill:white;" width="3em" height="3em" viewBox="0 0 16 16" class="bi bi-pause-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+			<a id="pause-icon-bubble" style="cursor:pointer;" onclick="pause()"><svg style="fill:white;" width="3em" height="3em" viewBox="0 0 16 16" class="bi bi-pause-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
   				<path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5zm5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5z"/>
-			</svg>
-			<svg style="fill:white;" width="3em" height="3em" viewBox="0 0 16 16" class="bi bi-shuffle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+			</svg></a>
+		<a onclick="pause()" style="display:none;" id="play-icon-bubble">
+			<svg style="fill:white;" xmlns="http://www.w3.org/2000/svg" height="3em" viewBox="0 0 24 24" width="3em"><path d="M0 0h24v24H0z" fill="none"/><path d="M8 5v14l11-7z"/></svg>
+		</a>
+			<a><svg style="fill:white;" width="3em" height="3em" viewBox="0 0 16 16" class="bi bi-shuffle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 			  <path fill-rule="evenodd" d="M0 3.5A.5.5 0 0 1 .5 3H1c2.202 0 3.827 1.24 4.874 2.418.49.552.865 1.102 1.126 1.532.26-.43.636-.98 1.126-1.532C9.173 4.24 10.798 3 13 3v1c-1.798 0-3.173 1.01-4.126 2.082A9.624 9.624 0 0 0 7.556 8a9.624 9.624 0 0 0 1.317 1.918C9.828 10.99 11.204 12 13 12v1c-2.202 0-3.827-1.24-4.874-2.418A10.595 10.595 0 0 1 7 9.05c-.26.43-.636.98-1.126 1.532C4.827 11.76 3.202 13 1 13H.5a.5.5 0 0 1 0-1H1c1.798 0 3.173-1.01 4.126-2.082A9.624 9.624 0 0 0 6.444 8a9.624 9.624 0 0 0-1.317-1.918C4.172 5.01 2.796 4 1 4H.5a.5.5 0 0 1-.5-.5z"/>
 			  <path d="M13 5.466V1.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192zm0 9v-3.932a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192z"/>
-			</svg>
+			</svg></a>
 			<a style="cursor:pointer;" onclick="backToMain()"><svg style="fill:white;" width="3em" height="3em" viewBox="0 0 16 16" class="bi bi-backspace-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 			  <path fill-rule="evenodd" d="M15.683 3a2 2 0 0 0-2-2h-7.08a2 2 0 0 0-1.519.698L.241 7.35a1 1 0 0 0 0 1.302l4.843 5.65A2 2 0 0 0 6.603 15h7.08a2 2 0 0 0 2-2V3zM5.829 5.854a.5.5 0 1 1 .707-.708l2.147 2.147 2.146-2.147a.5.5 0 1 1 .707.708L9.39 8l2.146 2.146a.5.5 0 0 1-.707.708L8.683 8.707l-2.147 2.147a.5.5 0 0 1-.707-.708L7.976 8 5.829 5.854z"/>
 			</svg></a>
@@ -103,6 +106,9 @@
 <script type="text/javascript">
 	$(document).ready(() => {
 		idMap = new Map();
+		locked = false;
+		locked_id = 0;
+		locked_list = new Map();
 	});
 
 	clicked = (value) => {
@@ -163,6 +169,15 @@
 	}
 
 	doAnimation = (list,i,size) => {
+		if(locked) {
+		  var html = "<div class='clear-msg-change' align='center'><p style='font-size:42px;color:white;'><b>Pausado</b></p><div>"; 
+	      $('.clear-msg-change').remove();
+	      $("#row-sort-bubble-text").append(html);
+	      locked_id = i;
+	      locked_list = list;
+	      return;
+		}
+
 		if (i < size) {
 			setTimeout(function (){
 				animatedBubble(list[i].get("n1"),list[i].get("n2"));
@@ -174,7 +189,7 @@
 				doAnimation(list,i+1,size);
 			},2000);
 		} else {
-			var html = "<div class='clear-msg-change' align='center'><p style='font-size:42px;color:white;'><b>Ordenado</b></p><div>"; 
+		  var html = "<div class='clear-msg-change' align='center'><p style='font-size:42px;color:white;'><b>Ordenado</b></p><div>"; 
 	      $('.clear-msg-change').remove();
 	      $("#row-sort-bubble-text").append(html);
 		}
@@ -186,7 +201,7 @@
 
 	    for (let i = 0; i < len; i++) {
 	        for (let j = 0; j < len; j++) {
-	            if (list[j] > list[j + 1]) {
+	            if (parseInt(list[j]) > parseInt(list[j + 1])) {
 	    			var map = new Map();
 	            	var n1 = list[j];
 	            	var n2 = list[j+1];
@@ -297,6 +312,21 @@
 			showBubble(list);
 		}
 	
+	}
+
+	pause = () => {
+		if (locked) {
+			locked = false;
+			$("#play-icon-bubble").hide();
+			$("#pause-icon-bubble").show();
+			$('.clear-msg-change').remove();
+			doAnimation(locked_list,locked_id,locked_list.length);
+			return;
+		}
+
+		$("#pause-icon-bubble").hide();
+		$("#play-icon-bubble").show();
+		locked = true;
 	}
 
 
