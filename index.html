@@ -358,11 +358,11 @@
 	        ix = (i+1) * -1;
 	        c_c = "C/"+list.slice(ix)[0];
 	        
-	        n_c = countElements(aux,c_c);
+	        // n_c = countElements(aux,c_c);
 	        
-	        if (n_c > 0) {
-	        	c_c += "-".repeat(n_c);
-	        }
+	        // if (n_c > 0) {
+	        // 	c_c += "-".repeat(n_c);
+	        // }
 
 	        debug.push(c_c);
 	        aux.push(c_c);
@@ -370,6 +370,7 @@
 	        id_ord++;
 	    }
 	    
+     	debug = normalizeArray(debug,list)
 	    console.log(end)
 	    console.log("------")
 	    console.log(list);
@@ -380,6 +381,34 @@
 
 	    return list;
 	};
+
+	normalizeArray = (array) => {
+		console.log("normalize")
+		n_a = [];
+		array.forEach((i) => {
+			if (countElements(n_a,i) == 0) {
+				c = countElements(array,i);
+				if (c > 1) {
+					for(var j = c - 1; j >= 0; j--){
+						if(typeof(i) == "string") {
+							// console.log("j " +j)
+							item = i + "-".repeat(j);
+							// console.log("item "+item)
+							n_a.push(item);
+						} 
+					}
+				} else {
+					n_a.push(i);
+				}
+			}
+			});
+			
+			
+
+		console.log(n_a);
+		console.log("------")
+		return n_a;
+	}
 
 	hideMain = () => {
 		document.getElementById("div-main").className = "container d-none";
