@@ -358,11 +358,11 @@
 	        ix = (i+1) * -1;
 	        c_c = "C/"+list.slice(ix)[0];
 	        
-	        // n_c = countElements(aux,c_c);
+	        n_c = countElements(aux,c_c);
 	        
-	        // if (n_c > 0) {
-	        // 	c_c += "-".repeat(n_c);
-	        // }
+	        if (n_c > 0) {
+	        	c_c += "-".repeat(n_c);
+	        }
 
 	        debug.push(c_c);
 	        aux.push(c_c);
@@ -370,7 +370,6 @@
 	        id_ord++;
 	    }
 	    
-     	debug = normalizeArray(debug,list)
 	    console.log(end)
 	    console.log("------")
 	    console.log(list);
@@ -382,33 +381,80 @@
 	    return list;
 	};
 
-	normalizeArray = (array) => {
-		console.log("normalize")
-		n_a = [];
-		array.forEach((i) => {
-			if (countElements(n_a,i) == 0) {
-				c = countElements(array,i);
-				if (c > 1) {
-					for(var j = c - 1; j >= 0; j--){
-						if(typeof(i) == "string") {
-							// console.log("j " +j)
-							item = i + "-".repeat(j);
-							// console.log("item "+item)
-							n_a.push(item);
-						} 
-					}
-				} else {
-					n_a.push(i);
-				}
-			}
-			});
-			
-			
+	bubbleSort2 = (list) => {
+		let len = list.length-1;
+		array = [];
 
-		console.log(n_a);
-		console.log("------")
-		return n_a;
+		var swapp;
+  	  	// var n = a.length-1;
+    	var x=list;
+    	do {
+        	swapp = false;
+        	for (var i=0; i < len; i++)
+        	{
+            	if (parseInt(x[i]) > parseInt(x[i+1]))
+            	{
+				var map = new Map();
+				var n1 = x[i];
+				var n2 = x[i+1];
+               	var temp = x[i];
+               	x[i] = x[i+1];
+               	x[i+1] = temp;
+				map.set("n1",n1);
+				map.set("n2",n2);
+				array.push(map);   
+				swapp = true;
+            	}
+        	}
+        	len--;
+		} while (swapp);
+		
+		console.log(array)
+	    doAnimation(array,0,array.length);
+ 		return x; 
 	}
+	// 
+// Merge Sort Implentation (Recursion)
+//
+
+function mergeSort (unsortedArray) {
+  // No need to sort the array if the array only has one element or empty
+  if (unsortedArray.length <= 1) {
+    return unsortedArray;
+  }
+  // In order to divide the array in half, we need to figure out the middle
+  const middle = Math.floor(unsortedArray.length / 2);
+
+  // This is where we will be dividing the array into left and right
+  const left = unsortedArray.slice(0, middle);
+  const right = unsortedArray.slice(middle);
+
+  // Using recursion to combine the left and right
+  return merge(
+    mergeSort(left), mergeSort(right)
+  );
+}
+
+// Merge the two arrays: left and right
+function merge (left, right) {
+  let resultArray = [], leftIndex = 0, rightIndex = 0;
+
+  // We will concatenate values into the resultArray in order
+  while (leftIndex < left.length && rightIndex < right.length) {
+    if (left[leftIndex] < right[rightIndex]) {
+      resultArray.push(left[leftIndex]);
+      leftIndex++; // move left array cursor
+    } else {
+      resultArray.push(right[rightIndex]);
+			rightIndex++; // move right array cursor
+    }
+  }
+
+  // We need to concat to the resultArray because there will be one element left over after the while loop
+  return resultArray
+          .concat(left.slice(leftIndex))
+          .concat(right.slice(rightIndex));
+}
 
 	hideMain = () => {
 		document.getElementById("div-main").className = "container d-none";
@@ -433,6 +479,8 @@
 
 	showMerge = () => {
 		document.getElementById("div-sort-merge").className = "container";
+		console.log(mergeSort(list));
+		// setTimeout(function(){mergeSort(list)},500);
 	}
 
 	hideError = () => {
