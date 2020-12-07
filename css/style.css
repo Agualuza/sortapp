@@ -52,36 +52,6 @@ body {
 	background-color: #13CE66;
 }
 
-.flex-right { 
-	display: flex; 
-	height:400px; 
-	flex-flow: row wrap; 
-	align-content: flex-start; 
-} 
-  
-.flex-right > div { 
-	width: 100px; 
-	margin: 10px; 
-	text-align: center; 
-	line-height: 75px; 
-	font-size: 30px; 
-} 
-
-.flex-left { 
-	display: flex; 
-	height:400px; 
-	flex-flow: row wrap; 
-	align-content: flex-end; 
-} 
-  
-.flex-left > div { 
-	width: 100px; 
-	margin: 10px; 
-	text-align: center; 
-	line-height: 75px; 
-	font-size: 30px; 
-} 
-
 .flex-r {
 	display: flex;
 	align-content: flex-end; 
@@ -90,4 +60,11 @@ body {
 .flex-l {
 	display: flex;
 	align-content: flex-start; 
+}
+
+.merge-message {
+	color: white;
+	font-size: 32px;
+	align-items: center;
+	width: 100%;
 }

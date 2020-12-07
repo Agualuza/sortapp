@@ -78,95 +78,119 @@ function generateBlocksMerge(list, end = false) {
 
   async function createPartitions() {
       var i = 1;
-      var delta_time = 2000;
-      steps.forEach((s) => {
-        setTimeout(function (){
-            if (locked_merge) {
-                var html = "<div class='clear-msg-change' align='center'><p style='font-size:42px;color:white;'><b>Pausado</b></p><div>"; 
-                $('.clear-msg-change').remove();
-                $("#row-sort-merge-text").append(html);
-                return;
-            }
-            const new_div = document.createElement("div");
-            if (steps.length == 1) {
-                new_div.classList.add("flex-a");
-            } else {
-                new_div.classList.add("flex-b");
-            }
-            new_div.classList.add("col-12");
-            new_div.classList.add("my-5");
-            if(s.get("t") == "s") {
-                left = s.get("l");
-                right = s.get("r");
-                var cont = document.createElement("div");
-                cont.classList.add("row");
+      var delta_time = 4000;
+      var k = 0;
+      var z = 0;
+      while (k < steps.length) {
+        if (locked_merge) {
+            var html = "<div class='clear-msg-change' align='center'><p style='font-size:42px;color:white;'><b>Pausado</b></p><div>"; 
+            $('.clear-msg-change').remove();
+            $("#row-sort-merge-text").append(html);
+            return;
+        } else {
+            setTimeout(function (){
+                const new_div = document.createElement("div");
+                // if (steps.length == 1) {
+                //     new_div.classList.add("flex-a");
+                // } else {
+                //     new_div.classList.add("flex-b");
+                // }
+                new_div.classList.add("col-12");
+                new_div.classList.add("my-5");
                 
-                left.forEach((e) => {
-                    // setTimeout(function (){
-                        var block = document.createElement("div");
-                        block.classList.add("block");
-                        block.classList.add("number-item");
-                        var blockLabel = document.createElement("label");
-                        blockLabel.classList.add("block__id");
-                        blockLabel.classList.add("card-body");
-                        blockLabel.innerHTML = e;
-                        block.appendChild(blockLabel);
-                        cont.appendChild(block);
-                        doScroll();
-                    // },i*delta_time);
-                });
-
-                var cont2 = document.createElement("div");
-                cont2.classList.add("row");
-
-                right.forEach((e) => {
-                    // setTimeout(function (){
-                        var block2 = document.createElement("div");
-                        block2.classList.add("block");
-                        block2.classList.add("number-item");
-                        var blockLabel2 = document.createElement("label");
-                        blockLabel2.classList.add("block__id");
-                        blockLabel2.classList.add("card-body");
-                        blockLabel2.innerHTML = e;
-                        block2.appendChild(blockLabel2);
-                        cont2.appendChild(block2);
-                        doScroll();
-                    // },i*delta_time);
-                });
-                new_div.appendChild(cont);
-                new_div.appendChild(cont2);
-                containerMerge.appendChild(new_div);
-
-            } else if (s.get("t") == "r") {
-                result = s.get("r");
-                if (result.length > 0) {
-                    var cont3 = document.createElement("div");
-                    cont3.classList.add("row");
-                    cont3.classList.add("result");
-                    result.forEach((e) => {
+                if(steps[z].get("t") == "s") {
+                    new_div.classList.add("flex-b");
+                    left = steps[z].get("l");
+                    right = steps[z].get("r");
+                    var cont = document.createElement("div");
+                    cont.classList.add("row");
+                    var text = document.createElement("p");
+                    text.classList.add("flex-a");
+                    text.classList.add("merge-message");
+                    text.innerText = "Particiona em 〖"+left+"〗e 〖"+right+"〗";
+                    left.forEach((e) => {
                         // setTimeout(function (){
-                            var block3 = document.createElement("div");
-                            block3.classList.add("block");
-                            block3.classList.add("number-item");
-                            
-                            var blockLabel3 = document.createElement("label");
-                            blockLabel3.classList.add("block__id");
-                            blockLabel3.classList.add("card-body");
-                            blockLabel3.innerHTML = e;
-                            block3.appendChild(blockLabel3);
-                            cont3.appendChild(block3);
+                            var block = document.createElement("div");
+                            block.classList.add("block");
+                            block.classList.add("number-item");
+                            var blockLabel = document.createElement("label");
+                            blockLabel.classList.add("block__id");
+                            blockLabel.classList.add("card-body");
+                            blockLabel.innerHTML = e;
+                            block.appendChild(blockLabel);
+                            cont.appendChild(block);
+                            doScroll();
                         // },i*delta_time);
-                        doScroll();
                     });
-                    new_div.appendChild(cont3);
-                    containerMerge.appendChild(new_div);
-                }
-            }
-            steps.shift();
-        },i*delta_time);
-        i++;
 
-      });
+                    var cont2 = document.createElement("div");
+                    cont2.classList.add("row");
+
+                    right.forEach((e) => {
+                        // setTimeout(function (){
+                            var block2 = document.createElement("div");
+                            block2.classList.add("block");
+                            block2.classList.add("number-item");
+                            var blockLabel2 = document.createElement("label");
+                            blockLabel2.classList.add("block__id");
+                            blockLabel2.classList.add("card-body");
+                            blockLabel2.innerHTML = e;
+                            block2.appendChild(blockLabel2);
+                            cont2.appendChild(block2);
+                            doScroll();
+                        // },i*delta_time);
+                    });
+                
+                    new_div.appendChild(cont);
+                    new_div.appendChild(cont2);
+                    containerMerge.appendChild(new_div);
+                    containerMerge.appendChild(text);
+                } else if (steps[z].get("t") == "r") {
+                    new_div.classList.add("flex-a");
+                    result = steps[z].get("r");
+                    var text2 = document.createElement("p")
+                    text2.innerText = "Junta em 〖"+result+"〗";
+                    text2.classList.add("flex-a");
+                    text2.classList.add("merge-message");
+                    if (result.length > 0) {
+                        var cont3 = document.createElement("div");
+                        cont3.classList.add("row");
+                        cont3.classList.add("result");
+                        result.forEach((e) => {
+                            // setTimeout(function (){
+                                var block3 = document.createElement("div");
+                                block3.classList.add("block");
+                                block3.classList.add("number-item");
+                                if(steps.length == 1){
+                                    block3.classList.add("merged");
+                                }
+                                var blockLabel3 = document.createElement("label");
+                                blockLabel3.classList.add("block__id");
+                                blockLabel3.classList.add("card-body");
+                                blockLabel3.innerHTML = e;
+                                block3.appendChild(blockLabel3);
+                                cont3.appendChild(block3);
+                            // },i*delta_time);
+                            doScroll();
+                        });
+                        new_div.appendChild(cont3);
+                        containerMerge.appendChild(new_div);
+                        containerMerge.appendChild(text2);
+                        if (steps.length == 1) {
+                            var p1 = document.createElement("p");
+                            p1.innerText = "Ordenado";
+                            p1.classList.add("flex-a");
+                            p1.classList.add("merge-message");
+                            containerMerge.appendChild(p1);
+                        }
+                    }
+                }
+                steps.shift();
+            },i*delta_time);
+        }
+        k++;
+        i++;
+    }
   }
 
   doScroll = () => {
