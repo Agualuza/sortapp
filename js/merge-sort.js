@@ -2,6 +2,11 @@ const containerMerge = document.querySelector("#container-merge-sort");
 
  mergeSort = array => {
     if(array.length < 2) return array;
+  
+    array = array.map(function (x) { 
+        return parseInt(x); 
+    });
+  
     const middle = Math.floor(array.length / 2);
     const leftSide = array.slice(0, middle);
     const rightSide = array.slice(middle, array.length);
