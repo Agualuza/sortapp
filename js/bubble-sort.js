@@ -36,6 +36,9 @@ async function bubbleSort(delay = 1000,l_i = 0,l_j = 0) {
             if (value1 > value2) {
               await swap(blocks[j], blocks[j + 1]);
               blocks = document.querySelectorAll(".block");
+              var html = "<div class='clear-msg-change-pre' align='center'><p style='width: auto;font-size:42px;color:white;'><b>" + value1 + "⇔" + value2 + "</b></p><div>"; 
+              $('.clear-msg-change-pre').remove();
+              $("#bubble-pre").append(html);
             }
       
             blocks[j].style.backgroundColor = "#86ecfb";
@@ -48,6 +51,9 @@ async function bubbleSort(delay = 1000,l_i = 0,l_j = 0) {
     }
     if(!locked) {
       blocks[0].style.backgroundColor = "#13CE66";
+      var html = "<div class='clear-msg-change-pre' align='center'><p style='width: auto;font-size:42px;color:white;'><b>" + "Ordenado" +"</b></p><div>"; 
+      $('.clear-msg-change-pre').remove();
+      $("#bubble-pre").append(html);
     }
   }
   

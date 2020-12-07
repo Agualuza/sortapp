@@ -172,7 +172,8 @@ backToMain = () => {
   pause = () => {
 		if (locked) {
       locked = false;
-      bubbleSort(1000,locked_i,locked_j);
+      var j = locked_j + 1;
+      bubbleSort(1000,locked_i,j);
 			$("#play-icon-bubble").hide();
 			$("#pause-icon-bubble").show();
       $('.clear-msg-change').remove();
