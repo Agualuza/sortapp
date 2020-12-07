@@ -7,6 +7,12 @@ body {
 	justify-content: space-around;
 }
 
+.flex-b {
+	display: flex;
+	justify-content: space-between;
+}
+
+
 .center {
   padding-top: clamp(50px,40vh,500px);
   text-align: center;
@@ -37,4 +43,12 @@ body {
 	width: 4rem; 
 	height: 4rem; 
 	background-color:#86ecfb;
+}
+
+.merged-item {
+	border: 3px dashed #2b2d3b;
+}
+
+.merged {
+	background-color: #6610f2;
 }

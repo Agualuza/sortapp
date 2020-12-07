@@ -90,17 +90,25 @@
 		<div class="row flex-a col-12 my-5" id="row-sort-merge">
 
 		</div>
+		<div id="row-sort-merge-sorted">
+		</div>
 		<div class="row flex-a col-12 my-5" id="row-sort-bubble">
-			<svg style="fill:white;" width="3em" height="3em" viewBox="0 0 16 16" class="bi bi-pause-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+			<a id="pause-icon-bubble" style="cursor:pointer;" onclick="pause()"><svg style="fill:white;" width="3em" height="3em" viewBox="0 0 16 16" class="bi bi-pause-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
   				<path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5zm5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5z"/>
-			</svg>
-			<svg style="fill:white;" width="3em" height="3em" viewBox="0 0 16 16" class="bi bi-shuffle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+			</svg></a>
+		<a onclick="pause()" style="display:none;" id="play-icon-bubble">
+			<svg style="fill:white;" xmlns="http://www.w3.org/2000/svg" height="3em" viewBox="0 0 24 24" width="3em"><path d="M0 0h24v24H0z" fill="none"/><path d="M8 5v14l11-7z"/></svg>
+		</a>
+			<a><svg style="fill:white;" width="3em" height="3em" viewBox="0 0 16 16" class="bi bi-shuffle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 			  <path fill-rule="evenodd" d="M0 3.5A.5.5 0 0 1 .5 3H1c2.202 0 3.827 1.24 4.874 2.418.49.552.865 1.102 1.126 1.532.26-.43.636-.98 1.126-1.532C9.173 4.24 10.798 3 13 3v1c-1.798 0-3.173 1.01-4.126 2.082A9.624 9.624 0 0 0 7.556 8a9.624 9.624 0 0 0 1.317 1.918C9.828 10.99 11.204 12 13 12v1c-2.202 0-3.827-1.24-4.874-2.418A10.595 10.595 0 0 1 7 9.05c-.26.43-.636.98-1.126 1.532C4.827 11.76 3.202 13 1 13H.5a.5.5 0 0 1 0-1H1c1.798 0 3.173-1.01 4.126-2.082A9.624 9.624 0 0 0 6.444 8a9.624 9.624 0 0 0-1.317-1.918C4.172 5.01 2.796 4 1 4H.5a.5.5 0 0 1-.5-.5z"/>
 			  <path d="M13 5.466V1.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192zm0 9v-3.932a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192z"/>
-			</svg>
-			<svg style="fill:white;" width="3em" height="3em" viewBox="0 0 16 16" class="bi bi-backspace-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+			</svg></a>
+			<a style="cursor:pointer;" onclick="backToMain()"><svg style="fill:white;" width="3em" height="3em" viewBox="0 0 16 16" class="bi bi-backspace-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 			  <path fill-rule="evenodd" d="M15.683 3a2 2 0 0 0-2-2h-7.08a2 2 0 0 0-1.519.698L.241 7.35a1 1 0 0 0 0 1.302l4.843 5.65A2 2 0 0 0 6.603 15h7.08a2 2 0 0 0 2-2V3zM5.829 5.854a.5.5 0 1 1 .707-.708l2.147 2.147 2.146-2.147a.5.5 0 1 1 .707.708L9.39 8l2.146 2.146a.5.5 0 0 1-.707.708L8.683 8.707l-2.147 2.147a.5.5 0 0 1-.707-.708L7.976 8 5.829 5.854z"/>
-			</svg>
+			</svg></a>
+		</div>
+		<br/>
+		<div id="row-sort-merge-text">
 		</div>
 	</div>
 	
@@ -113,7 +121,13 @@
 		locked_id = 0;
 		changed = [];
 		locked_list = new Map();
+		current_left = '';
+		current_right = '';
 		merge_steps = [];
+		steps = [];
+		can = false;
+		done = false;
+		list_aux = [];
 	});
 
 	clicked = (value) => {
@@ -336,11 +350,142 @@
   );
 }
 
+genareteMerge = (array,array2,idx) => {
+  if (array.length < 1) {
+    return array;
+  }
+  // genareteMerge([4,3,2,1],[],0);
+  array = array.map(function (x) { 
+  	return parseInt(x); 
+  });
+
+  const middle = Math.floor(array.length / 2);
+  const middle2 = Math.floor(array2.length / 2);
+
+  const left = array.slice(0, middle);
+  const right = array.slice(middle);
+
+  const left2 = array2.slice(0, middle2);
+  const right2 = array2.slice(middle2);
+
+  if (idx > 0) {
+  	 var tp_map = new Map();
+	  tp_map.set("l",array);
+	  tp_map.set("r",array2);
+	  merge_steps.push(tp_map);
+  }
+  genareteMerge(left,right,++idx);
+  genareteMerge(left2,right2,++idx);
+}
+
+joinMerge = () => {
+	var a = [];
+	var l = [];
+	var r = [];
+	// genareteMerge([4,3,2,1],[],0);
+	
+	merge_steps.forEach((p) => {
+		var lt = p.get("l");
+		var rt = p.get("r");
+		for (var i = 0; i < lt.length - 1; i++) {
+			for (var j = 1; j <= lt.length - 1; j = j + 2) {
+
+				 l = [Math.min(parseInt(lt[i]),parseInt(lt[j])),Math.max(parseInt(lt[i]),parseInt(lt[j]))];
+			};
+		};
+		for (var i = 0; i < rt.length - 1; i++) {
+			for (var j = 1; j <= rt.length - 1; j = j + 2) {
+
+				 r = [Math.min(parseInt(rt[i]),parseInt(rt[j])),Math.max(parseInt(rt[i]),parseInt(rt[j]))];
+			};
+		};
+	});
+	a.push(l)
+	a.push(r)
+
+	if (l[0] <= r[0]) {
+		var aux = [...l,...r];
+	} else {
+		var aux = [...r,...l];
+	}
+
+	list_aux = aux;
+
+	// sorted = aux;
+
+	// var idx = 0;
+	// console.log(aux)
+	// while (aux.length > 0) {
+	// 	var b = [Math.min(parseInt(aux[idx]),parseInt(aux[idx+2])),Math.max(parseInt(aux[idx]),parseInt(aux[idx+2]))];
+		
+	// 	if(aux[idx+1] == undefined) {
+	// 		b = [aux[idx]];
+	// 	}
+
+	// 	a.push(b);
+	// 	aux.pop(idx);
+	// 	aux.pop(idx+2);
+	// 	isSorted = arraysEqual()
+	// 	if()
+	// }
+
+	// console.log(aux);
+	// for (var i = 0; i <= aux.length - 1; i++) {
+	// 	var j = i + 1;
+	// 	if(aux[j] != undefined) {
+	// 		if(aux[i] >= aux[j]) {
+	// 			var temp = aux[i];
+	// 			aux[i] = aux[j];
+	// 			aux[j] = aux[i];
+	// 		}
+	// 		// c = countArrayInArray(a,[aux[i],aux[j]]);
+	// 		// console.log("CONTADOR => "+c)
+	// 		a.push([aux[i],aux[j]]);
+	// 	}
+		
+	// }
+
+
+	steps = a;
+}
+
+arraysEqual = (a, b) => {
+  if (a === b) return true;
+  if (a == null || b == null) return false;
+  if (a.length !== b.length) return false;
+
+  // If you don't care about the order of the elements inside
+  // the array, you should sort both arrays here.
+  // Please note that calling sort on an array will modify that array.
+  // you might want to clone your array first.
+
+  for (var i = 0; i < a.length; ++i) {
+    if (a[i] !== b[i]) return false;
+  }
+  return true;
+}
+
+countArrayInArray = (array,i) => {
+	var c = 0;
+	array.forEach((j) => {
+		// console.log(j)
+		// console.log(i)
+		// console.log(arraysEqual(j,i))
+		// console.log("//")
+		if(arraysEqual(j,i)) {
+				c += 1;
+		}
+	});
+	return c;
+}
+
+
  doMergeSort = (left, right) => {
 	  let resultArray = [], leftIndex = 0, rightIndex = 0;
 	  var tp_map = new Map();
 	  tp_map.set("l",left);
 	  tp_map.set("r",right);
+	  console.log(tp_map);
 	  merge_steps.push(tp_map);
 
 	  while (leftIndex < left.length && rightIndex < right.length) {
@@ -427,40 +572,263 @@
 	};
 
 	doMerge = (i) => {
-			var html = "<div>";
-			
-			console.log(i)
-			if (i.has("l")) {
-				html += "<div class='number-item' style='float:left'>";
-				i.get("l").forEach((j) => {
-				html += "<div class='card-body'>" + j + "</div>";
-				});
-				html += "</div>";
-			} 
-			
+			id_l = makeid(5);
 
-			if (i.has("r")) {
-				html += "<div class='number-item' style='float:right'>";
-				i.get("r").forEach((j) => {
-					html += "<div class='card-body'>" + j + "</div>";
-				});
-				html += "</div></div>";
+			empty_l = false;
 
+			if(current_left == '') {
+				empty_l = true;
 			}
-			
-			$("#row-sort-merge").append(html);
+
+			old = current_left;
+			current_left = id_l;
+
+			var html = "<div class='row flex-b col-12 my-5' id="+current_left+">";
+
+
+			if(typeof(i) == "object") {
+				
+				if (i.has("l")) {
+					html += "<div>";
+					i.get("l").forEach((j) => {
+					html += "<div class='number-item merged-item' align='left' style='float:left'>";
+					html += "<div class='card-body'>" + j + "</div>";
+					html += "</div>";
+
+					});
+					html += "</div>";
+				} 
+				
+
+				if (i.has("r")) {
+					html += "<div>";
+					i.get("r").forEach((j) => {
+						html += "<div class='number-item merged-item' align='right' style='float:right'>";
+						html += "<div class='card-body'>" + j + "</div>";
+						html += "</div>";
+					});
+					html += "</div>";
+				}
+				
+				if (empty_l) {
+					old = 'row-sort-merge';
+				}
+
+				id_elemento = "#"+old;
+				console.log(id_elemento)
+				$(html).insertAfter( $(id_elemento));
+				// var br = "<br/>";
+				// $(br).insertAfter( $("#row-sort-merge" ));
+			}
 	}
 
-	startMerge = (merge_list,i,size) => {
-		if (i < size) {
-				setTimeout(function (){doMerge(merge_list[i])},2000);
-					i++;
-			} else {
-		  var html = "<div class='clear-msg-change' align='center'><p style='font-size:42px;color:white;'><b>Ordenado</b></p><div>"; 
+	showMerged = (array) => {
+		console.log("#"+current_left)
+		$("#"+current_left).remove();
+		var html = "<div class='row flex-a col-12 my-5' id="+'merged-id'+">";
+		array.forEach((i) => {
+			html += "<div class='number-item merged'>";
+			html += "<div class='card-body'>" + i + "</div>";
+			html += "</div>";
+		});
+		html += "</div>";
+		console.log("#"+current_left)
+		$("#row-sort-merge-sorted").append(html);
+		// $(html).insertAfter( $("#"+current_left));
+	};
+
+	startMerge = (merge_list,i,size,merged) => {
+		if(locked) {
+		  var html = "<div class='clear-msg-change row flex-a col-12 my-5' align='center'><p style='font-size:42px;color:white;'><b>Pausado</b></p><div>"; 
 	      $('.clear-msg-change').remove();
 	      $("#row-sort-bubble-text").append(html);
+	      locked_id = i;
+	      locked_list = list;
+	      return;
+		}
+		size = size - 1;
+		if (size > 0) {
+				console.log(merge_list[size])
+				setTimeout(function (){doMerge(merge_list[size]);startMerge(merge_list,++i,--size,merged);},2000);
+		 	} else {
+			  // showMerged(merged);
+			  // var html = "<div class='clear-msg-change' align='center'><p style='font-size:42px;color:white;'><b>Ordenado</b></p><div>"; 
+		   //    $('.clear-msg-change').remove();
+		   //    $("#row-sort-merge-text").append(html);
+		   setTimeout(function (){startMerge2(steps,0,steps.length,merged)},500);
 		}
 	}
+
+	doMerge2 = (i) => {
+		id_l = makeid(5);
+
+		empty_l = false;
+
+		if(current_left == '') {
+			empty_l = true;
+		}
+
+		old = current_left;
+		current_left = id_l;
+		console.log("cl =. " + current_left);
+
+		var html = "<div class='row flex-a col-12 my-5' id="+current_left+">";
+
+
+		i.forEach((j) => {
+			html += "<div class='number-item merged-item'>";
+			html += "<div class='card-body'>" + j + "</div>";
+			html += "</div>";
+		});
+
+		if (empty_l) {
+					old = 'row-sort-merge';
+		}
+
+		id_elemento = "#"+old;
+		$(html).insertAfter( $(id_elemento));
+	}
+
+	function separar(base, max) {
+	  var res = [];
+	  
+	  for (var i = 0; i < base.length; i = i+(max-1)) {
+	    res.push(base.slice(i,(i+max)));
+	  }
+	  res[res.length-1].push(base[0]);
+	  return res;
+	}
+
+	function arr_diff (a1, a2) {
+
+	    var a = [], diff = [];
+
+	    for (var i = 0; i < a1.length; i++) {
+	        a[a1[i]] = true;
+	    }
+
+	    for (var i = 0; i < a2.length; i++) {
+	        if (a[a2[i]]) {
+	            delete a[a2[i]];
+	        } else {
+	            a[a2[i]] = true;
+	        }
+	    }
+
+	    for (var k in a) {
+	        diff.push(k);
+	    }
+
+	    return diff;
+	}
+
+	startMerge2 = (merge_list,i,size,merged) => {
+		id_l = makeid(5);
+
+		empty_l = false;
+
+		if(current_left == '') {
+			empty_l = true;
+		}
+
+		old = current_left;
+		current_left = id_l;
+		console.log("cl =. " + current_left);
+
+		var html = "<div class='row flex-a col-12 my-5' id="+current_left+">";
+
+
+		// merge_list.forEach((j) => {
+		// 	console.log("--ad--")
+		// 	console.log(j)
+		// 	console.log("--ed--")
+		// 	j.forEach((k) => {
+		// 		html += "<div class='number-item merged-item'>";
+		// 	html += "<div class='card-body'>" + k+ "</div>";
+		// 	html += "</div>";
+		// 	})
+			
+		// });
+
+		html += "</div>";
+
+		aux = [];
+		idx = 2;
+		nn = [];
+		while (idx <= merged.length) {
+			n_a = separar(list_aux,idx);
+			aux = [...aux,...n_a];
+			nn.push(n_a);
+			idx++;
+		}
+
+
+
+		if (empty_l) {
+			old = 'row-sort-merge';
+		}
+
+		id_elemento = "#"+old;
+		$(html).insertAfter( $(id_elemento));
+
+		setTimeout(function (){
+			var old = current_left;
+			var tt = "<div class='row flex-a col-12 my-5'>";
+			console.log("nnnn");
+			console.log(nn)
+			idx_aux = 0;
+			nn[0].forEach((k) => {
+				console.log("j0 -->" +k[0])
+				tt += "<div class='number-item merged-item'>";
+				tt += "<div class='card-body'>" + k[0] + "</div></div>";
+				idx_aux++;
+
+			});
+
+			tt += "</div>";
+
+			// for (var i = 1; i < nn.length; i++) {
+			// 	current_left = makeid(5);
+			// 	var tt = "<div class='row flex-a col-12 my-5' id="+current_left+">";
+			// 	nn[i][0].forEach((x) => {
+			// 	tt += "<div>";
+			// 	tt += "<div class='number-item merged-item'>";
+			// 	tt += "<div class='card-body'>" + x + "</div>";
+			// 	tt += "</div>";
+			// 	})
+			// 	tt += "</div>";
+			// };
+
+			var id_elemento = "#"+old;
+			$(html).insertAfter( $(id_elemento));
+			$(tt).insertAfter( $(id_elemento));
+			setTimeout(function (){showMerged(merged)},700);
+		},1500);
+
+	}
+
+	// startMerge2 = (merge_list,i,size,merged) => {
+	// 	if(locked) {
+	// 	  var html = "<div class='clear-msg-change row flex-a col-12 my-5' align='center'><p style='font-size:42px;color:white;'><b>Pausado</b></p><div>"; 
+	//       $('.clear-msg-change').remove();
+	//       $("#row-sort-bubble-text").append(html);
+	//       locked_id = i;
+	//       locked_list = list;
+	//       return;
+	// 	}
+		
+	// 	if (i < size) {
+	// 		console.log(merge_list[i])
+	// 			setTimeout(function (){doMerge2(merge_list[i]);startMerge2(merge_list,++i,size,merged);},2000);
+	// 		} else {
+	// 		  done = true;		      
+	// 		  showMerged(merged);
+	// 		  var html = "<div class='clear-msg-change' align='center'><p style='font-size:42px;color:white;'><b>Ordenado</b></p><div>"; 
+	// 	      $('.clear-msg-change').remove();
+	// 	      $("#row-sort-merge-text").append(html);
+	// 	}
+	// }
+
 
 	hideMain = () => {
 		$("#div-main").hide();
@@ -491,7 +859,14 @@
 	showMerge = (list) => {
 		$("#div-sort-merge").show();
 		var merged = mergeSort(list);
-		setTimeout(function (){startMerge(merge_steps,0,merge_steps.length)},500);
+		joinMerge();
+		setTimeout(function (){startMerge(merge_steps,0,merge_steps.length,merged);},500);
+		
+		// while (!done) {
+		// 	if (can) {
+		// 		setTimeout(function (){startMerge2(steps,0,steps.length,merged)},500);
+		// 	}
+		// }
 		// document.getElementById("div-sort-merge").className = "container";
 	}
 
