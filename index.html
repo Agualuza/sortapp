@@ -573,7 +573,6 @@ countArrayInArray = (array,i) => {
 
 	doMerge = (i) => {
 			id_l = makeid(5);
-
 			empty_l = false;
 
 			if(current_left == '') {
@@ -614,6 +613,7 @@ countArrayInArray = (array,i) => {
 					old = 'row-sort-merge';
 				}
 
+
 				id_elemento = "#"+old;
 				console.log(id_elemento)
 				$(html).insertAfter( $(id_elemento));
@@ -646,16 +646,15 @@ countArrayInArray = (array,i) => {
 	      locked_list = list;
 	      return;
 		}
-		size = size - 1;
+		console.log("size => "+size)
 		if (size > 0) {
-				console.log(merge_list[size])
 				setTimeout(function (){doMerge(merge_list[size]);startMerge(merge_list,++i,--size,merged);},2000);
 		 	} else {
-			  // showMerged(merged);
-			  // var html = "<div class='clear-msg-change' align='center'><p style='font-size:42px;color:white;'><b>Ordenado</b></p><div>"; 
-		   //    $('.clear-msg-change').remove();
-		   //    $("#row-sort-merge-text").append(html);
-		   setTimeout(function (){startMerge2(steps,0,steps.length,merged)},500);
+			  showMerged(merged);
+			  var html = "<div class='clear-msg-change' align='center'><p style='font-size:42px;color:white;'><b>Ordenado</b></p><div>"; 
+		      $('.clear-msg-change').remove();
+		      $("#row-sort-merge-text").append(html);
+		   // setTimeout(function (){startMerge2(steps,0,steps.length,merged)},500);
 		}
 	}
 
@@ -859,8 +858,8 @@ countArrayInArray = (array,i) => {
 	showMerge = (list) => {
 		$("#div-sort-merge").show();
 		var merged = mergeSort(list);
-		joinMerge();
-		setTimeout(function (){startMerge(merge_steps,0,merge_steps.length,merged);},500);
+		// joinMerge();
+		setTimeout(function (){startMerge(merge_steps,0,merge_steps.length - 1,merged);},500);
 		
 		// while (!done) {
 		// 	if (can) {
